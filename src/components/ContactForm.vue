@@ -40,18 +40,63 @@
       />
       <ErrorMessage name="phone" class="error-feedback" />
     </div>
-    <div class="form-group form-check">
-      <input
-        name="favorite"
-        type="checkbox"
-        class="form-check-input"
-        v-model="contactLocal.favorite"
-      />
-      <label for="favorite" class="form-check-label">
-        <strong>Liên hệ yêu thích</strong>
-      </label>
-    </div>
+
     <div class="form-group">
+      <label for="favorite">Liên hệ yêu thích</label>
+      <Field
+        name="favorite"
+        type="text"
+        class="form-control"
+        v-model="contactLocal.favorite"
+        placeholder="Nhập liên hệ yêu thích..."
+      />
+    </div>
+
+    <div class="form-group">
+      <label><strong>Sở thích:</strong></label>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          value="Âm nhạc"
+          v-model="contactLocal.hobbies"
+          id="hobby1"
+        />
+        <label class="form-check-label" for="hobby1">Âm nhạc</label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          value="Thể thao"
+          v-model="contactLocal.hobbies"
+          id="hobby2"
+        />
+        <label class="form-check-label" for="hobby2">Thể thao</label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          value="Du lịch"
+          v-model="contactLocal.hobbies"
+          id="hobby3"
+        />
+        <label class="form-check-label" for="hobby3">Du lịch</label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          value="Đọc sách"
+          v-model="contactLocal.hobbies"
+          id="hobby4"
+        />
+        <label class="form-check-label" for="hobby4">Đọc sách</label>
+      </div>
+    </div>
+
+    <div class="form-group mt-3">
       <button class="btn btn-primary">Lưu</button>
       <button
         v-if="contactLocal._id"
@@ -102,9 +147,10 @@ export default {
         ),
     });
     return {
-      // Chúng ta sẽ không muốn hiệu chỉnh props, nên tạo biến cục bộ
-      // contactLocal để liên kết với các input trên form
-      contactLocal: this.contact,
+      contactLocal: {
+        ...this.contact,
+        hobbies: this.contact.hobbies || [],
+      },
       contactFormSchema,
     };
   },
@@ -113,15 +159,13 @@ export default {
       this.$emit("submit:contact", this.contactLocal);
     },
     deleteContact() {
-      this.$emit("delete:contact", this.contactLocal.id);
+      this.$emit("delete:contact", this.contactLocal._id);
     },
     Cancel() {
       const reply = window.confirm(
         "You have unsaved changes! Do you want to leave?",
       );
       if (!reply) {
-        // stay on the page if
-        // user clicks 'Cancel'
         return false;
       } else this.$router.push({ name: "contactbook" });
     },
